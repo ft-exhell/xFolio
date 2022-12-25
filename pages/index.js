@@ -24,7 +24,7 @@ export default function Home() {
   }
 
   const getEthereumBalances = async (address) => {
-    const res = await fetch(`https://api.covalenthq.com/v1/1/address/${address}/balances_v2/?key=${process.env.NEXT_PUBLIC_COVALENT_API_KEY}`);
+    const res = await fetch(`http://localhost:8080/https://api.covalenthq.com/v1/1/address/${address}/balances_v2/?key=${process.env.NEXT_PUBLIC_COVALENT_API_KEY}`);
     const data = await res.json();
     const eth = data.data.items.filter(token => token.contract_address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
     const bigNumber = ethers.utils.parseUnits(data.data.items[0].balance.toString(), 'wei');
@@ -33,7 +33,7 @@ export default function Home() {
   }
 
   const getSolanaBalances = async (address) => {
-    const res = await fetch(`https://api.covalenthq.com/v1/1399811149/address/${address}/balances_v2/?key=${process.env.NEXT_PUBLIC_COVALENT_API_KEY}`);
+    const res = await fetch(`http://localhost:8080/https://api.covalenthq.com/v1/1399811149/address/${address}/balances_v2/?key=${process.env.NEXT_PUBLIC_COVALENT_API_KEY}`);
     const data = await res.json();
     const sol = data.data.items.filter(token => token.contract_address === "11111111111111111111111111111111")
 
