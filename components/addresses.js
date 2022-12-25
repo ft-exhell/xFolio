@@ -10,9 +10,9 @@ export default function Addresses({ addresses }) {
                     </li>
                 ))}
             </ul>
-            <h3>UTXO (e.g., Bitcoin, Cardano)</h3>
+            <h3>Bitcoin</h3>
             <ul>
-                {addresses && addresses.utxo?.map((el, i) => (
+                {addresses && addresses.bitcoin?.map((el, i) => (
                     <li key={i}>
                         {el}
                     </li>
