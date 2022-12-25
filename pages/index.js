@@ -22,7 +22,7 @@ export default function Home() {
             <Navbar username={username} />
             <div className='h-screen flex items-center justify-evenly'>
               <Addresses addresses={addresses} />
-              <TotalBalance />
+              <TotalBalance addresses={addresses}/>
             </div>
           </>
         )}
