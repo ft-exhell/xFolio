@@ -42,7 +42,6 @@ export default function Home() {
 
   const handleToggleAddAddress = () => {
     setAddAddress(!addAddress);
-    console.log(addAddress)
   }
 
   useEffect(() => {
@@ -96,7 +95,11 @@ export default function Home() {
                 solanaBalances={solanaBalances}
                 handleToggleAddAddress={handleToggleAddAddress}
               />
-              <TotalBalance addresses={addresses} />
+              <TotalBalance 
+                bitcoinBalances={bitcoinBalances}
+                ethereumBalances={ethereumBalances}
+                solanaBalances={solanaBalances} 
+              />
             </div>
           </>
         )}

@@ -33,7 +33,7 @@ export default function AddAddressModal({ uid, handleToggleAddAddress }) {
     const targetChain = userData.addresses[chain]
 
     await updateDoc(userRef, { [`addresses.${chain}`]: [...targetChain, address]})
-    setOpen(false);
+    handleToggleAddAddress(false);
   }
 
   return (
