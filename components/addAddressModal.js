@@ -1,5 +1,5 @@
 import { Fragment, useRef, useState } from 'react'
-import { doc, getDoc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { Dialog, Transition } from '@headlessui/react'
 

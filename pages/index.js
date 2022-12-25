@@ -45,9 +45,6 @@ export default function Home() {
     console.log(addAddress)
   }
 
-  console.log(addAddress)
-
-
   useEffect(() => {
     if (addresses) {
       for (const addrType in addresses) {
@@ -92,6 +89,7 @@ export default function Home() {
             <Navbar username={username} />
             <div className='h-screen flex items-center justify-evenly'>
               <Addresses
+                uid={user.uid}
                 addresses={addresses}
                 bitcoinBalances={bitcoinBalances}
                 ethereumBalances={ethereumBalances}
