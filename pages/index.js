@@ -3,6 +3,7 @@ import Head from 'next/head'
 import { ethers } from 'ethers';
 import { useUserData } from '../lib/hooks';
 import WelcomeModal from '../components/welcomeModal'
+import AddAddressModal from '../components/addAddressModal';
 import Navbar from '../components/navbar';
 import TotalBalance from '../components/totalBalance';
 import Addresses from '../components/addresses';
@@ -13,6 +14,7 @@ export default function Home() {
   const [bitcoinBalances, setBitcoinBalances] = useState([]);
   const [ethereumBalances, setEthereumBalances] = useState([]);
   const [solanaBalances, setSolanaBalances] = useState([]);
+  const [addAddress, setAddAddress] = useState(false);
 
   const getBitcoinBalances = async (address) => {
     const res = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${address}/balance`);
@@ -37,6 +39,13 @@ export default function Home() {
 
     return sol[0].balance / 1000000000;
   }
+
+  const handleToggleAddAddress = () => {
+    setAddAddress(!addAddress);
+    console.log(addAddress)
+  }
+
+  console.log(addAddress)
 
 
   useEffect(() => {
@@ -87,12 +96,14 @@ export default function Home() {
                 bitcoinBalances={bitcoinBalances}
                 ethereumBalances={ethereumBalances}
                 solanaBalances={solanaBalances}
+                handleToggleAddAddress={handleToggleAddAddress}
               />
               <TotalBalance addresses={addresses} />
             </div>
           </>
         )}
-        {!user && <WelcomeModal isOpen={!user} />}
+        {addAddress && <AddAddressModal uid={user.uid} handleToggleAddAddress={handleToggleAddAddress} />}
+        {!user && <WelcomeModal />}
       </main>
     </>
   )
