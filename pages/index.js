@@ -1,12 +1,13 @@
-import { useContext, useState, useEffect } from 'react'
 import Head from 'next/head'
 import { useUserData } from '../lib/hooks';
 import WelcomeModal from '../components/welcomeModal'
 import Navbar from '../components/navbar';
+import TotalBalance from '../components/totalBalance';
+import Addresses from '../components/addresses';
 
 
 export default function Home() {
-  const { user } = useUserData();
+  const { user, username, addresses } = useUserData();
 
   return (
     <>
@@ -16,8 +17,16 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <main>
-        <Navbar />
-          {!user &&<WelcomeModal isOpen={!user}/>}
+        {user && (
+          <>
+            <Navbar username={username} />
+            <div className='h-screen flex items-center justify-evenly'>
+              <Addresses addresses={addresses} />
+              <TotalBalance />
+            </div>
+          </>
+        )}
+        {!user && <WelcomeModal isOpen={!user} />}
       </main>
     </>
   )

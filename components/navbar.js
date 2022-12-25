@@ -6,7 +6,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { auth } from '../lib/firebase'
 
-export default function Navbar() {
+export default function Navbar({ username }) {
     return (
         <Popover className="relative bg-white">
             <div className="mx-auto max-w-7xl px-4 sm:px-6">
@@ -21,6 +21,9 @@ export default function Navbar() {
                             <span className="sr-only">Open menu</span>
                             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
                         </Popover.Button>
+                    </div>
+                    <div>
+                        <p>Henlo, {`${username}`}!</p>
                     </div>
                     <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
                         <button
