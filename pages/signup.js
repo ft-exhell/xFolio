@@ -77,7 +77,7 @@ const AssignUsername = ({ uid }) => {
     }
 
     const assignUsername = async () => {
-        await setDoc(doc(db, 'users', uid), { username })
+        await setDoc(doc(db, 'users', uid), { username, addresses: [] })
         await setDoc(doc(db, 'usernames', username), { uid })
         router.push('/')
     }
