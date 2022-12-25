@@ -1,20 +1,20 @@
-export default function Addresses({ addresses }) {
+export default function Addresses({ addresses, bitcoinBalances, ethereumBalances, solanaBalances }) {
     return (
         <div>
             <h2 className="font-medium leading-tight text-3xl">Your Addresses</h2>
-            <h3>EVM (e.g., Ethereum, BSC, Avalanche)</h3>
-            <ul>
-                {addresses && addresses.evm?.map((el, i) => (
-                    <li key={i}>
-                        {el}
-                    </li>
-                ))}
-            </ul>
             <h3>Bitcoin</h3>
             <ul>
                 {addresses && addresses.bitcoin?.map((el, i) => (
                     <li key={i}>
-                        {el}
+                        {el}, balance: {bitcoinBalances[i]}
+                    </li>
+                ))}
+            </ul>
+            <h3>Ethereum</h3>
+            <ul>
+                {addresses && addresses.ethereum?.map((el, i) => (
+                    <li key={i}>
+                        {el}, balance: {ethereumBalances && ethereumBalances[i]}
                     </li>
                 ))}
             </ul>
@@ -22,7 +22,7 @@ export default function Addresses({ addresses }) {
             <ul>
                 {addresses && addresses.solana?.map((el, i) => (
                     <li key={i}>
-                        {el}
+                        {el}, balance: {solanaBalances[i]}
                     </li>
                 ))}
             </ul>

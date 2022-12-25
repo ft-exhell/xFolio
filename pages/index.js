@@ -1,4 +1,6 @@
+import { useState, useEffect } from 'react';
 import Head from 'next/head'
+import { ethers } from 'ethers';
 import { useUserData } from '../lib/hooks';
 import WelcomeModal from '../components/welcomeModal'
 import Navbar from '../components/navbar';
@@ -8,6 +10,65 @@ import Addresses from '../components/addresses';
 
 export default function Home() {
   const { user, username, addresses } = useUserData();
+  const [bitcoinBalances, setBitcoinBalances] = useState([]);
+  const [ethereumBalances, setEthereumBalances] = useState([]);
+  const [solanaBalances, setSolanaBalances] = useState([]);
+
+  const getBitcoinBalances = async (address) => {
+    const res = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${address}/balance`);
+    const data = await res.json();
+
+    return data.balance / 100000000;
+  }
+
+  const getEthereumBalances = async (address) => {
+    const res = await fetch(`http://localhost:8080/https://api.covalenthq.com/v1/1/address/${address}/balances_v2/?key=${process.env.NEXT_PUBLIC_COVALENT_API_KEY}`);
+    const data = await res.json();
+    const eth = data.data.items.filter(token => token.contract_address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
+    const bigNumber = ethers.utils.parseUnits(data.data.items[0].balance.toString(), 'wei');
+
+    return ethers.utils.formatUnits(bigNumber, 'ether');
+  }
+
+  const getSolanaBalances = async (address) => {
+    const res = await fetch(`http://localhost:8080/https://api.covalenthq.com/v1/1399811149/address/${address}/balances_v2/?key=${process.env.NEXT_PUBLIC_COVALENT_API_KEY}`);
+    const data = await res.json();
+    const sol = data.data.items.filter(token => token.contract_address === "11111111111111111111111111111111")
+
+    return sol[0].balance / 1000000000;
+  }
+
+
+  useEffect(() => {
+    if (addresses) {
+      for (const addrType in addresses) {
+        if (addrType === 'bitcoin') {
+          const requests = [];
+          addresses[addrType].forEach(address => {
+            requests.push(getBitcoinBalances(address));
+          });
+          Promise.all(requests)
+            .then(balances => setBitcoinBalances(balances))
+        }
+        if (addrType === 'ethereum') {
+          const requests = [];
+          addresses[addrType].forEach(address => {
+            requests.push(getEthereumBalances(address));
+          });
+          Promise.all(requests)
+            .then(balances => setEthereumBalances(balances))
+        }
+        if (addrType === 'solana') {
+          const requests = [];
+          addresses[addrType].forEach(address => {
+            requests.push(getSolanaBalances(address));
+          });
+          Promise.all(requests)
+            .then(balances => setSolanaBalances(balances))
+        }
+      }
+    }
+  }, [addresses])
 
   return (
     <>
@@ -21,8 +82,13 @@ export default function Home() {
           <>
             <Navbar username={username} />
             <div className='h-screen flex items-center justify-evenly'>
-              <Addresses addresses={addresses} />
-              <TotalBalance addresses={addresses}/>
+              <Addresses
+                addresses={addresses}
+                bitcoinBalances={bitcoinBalances}
+                ethereumBalances={ethereumBalances}
+                solanaBalances={solanaBalances}
+              />
+              <TotalBalance addresses={addresses} />
             </div>
           </>
         )}
