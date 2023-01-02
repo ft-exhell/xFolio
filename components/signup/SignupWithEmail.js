@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import zxcvbn from "zxcvbn";
-import { auth } from '../../lib/firebase';
+import { auth, db } from '../../lib/firebase';
 import PasswordStrengthMeter from "./PasswordStrengthMeter";
 
 const SignUpWithEmail = () => {
@@ -11,6 +13,8 @@ const SignUpWithEmail = () => {
     const [passwordScore, setPasswordScore] = useState(0);
     const [error, setError] = useState(null);
 
+    const router = useRouter();
+
     const handleSignupWithEmail = async (e) => {
         try {
             e.preventDefault();
@@ -18,8 +22,13 @@ const SignUpWithEmail = () => {
                 setError('come up with a stronger password')
                 return
             }
-            await createUserWithEmailAndPassword(auth, email, password);
+            const res = await createUserWithEmailAndPassword(auth, email, password);
+            await setDoc(doc(db, 'users', res.user.uid), {
+                addresses: [],
+            })
+            router.push('/')
         } catch (err) {
+            console.log(err)
             switch (err.code) {
                 case 'auth/email-already-in-use':
                     setError(

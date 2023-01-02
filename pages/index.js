@@ -16,6 +16,8 @@ export default function Home() {
   const [solanaBalances, setSolanaBalances] = useState([]);
   const [addAddress, setAddAddress] = useState(false);
 
+  console.log(user)
+
   const getBitcoinBalances = async (address) => {
     const res = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${address}/balance`);
     const data = await res.json();
