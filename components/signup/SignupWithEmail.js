@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import zxcvbn from "zxcvbn";
 import { auth } from '../../lib/firebase';
@@ -21,7 +22,18 @@ const SignUpWithEmail = () => {
         } catch (err) {
             switch (err.code) {
                 case 'auth/email-already-in-use':
-                    setError(`the user already exists, did you mean to log in?`);
+                    setError(
+                        <>
+                            <p>
+                                This email is already registered. Did you mean to <Link
+                                    style={{ textDecoration: "underline" }}
+                                    href="/login"
+                                >
+                                    log in
+                                </Link>?
+                            </p>
+                        </>
+                    );
                     break
                 default:
                     setError('something went wrong with our database, retry')
@@ -36,12 +48,7 @@ const SignUpWithEmail = () => {
 
     const handlePasswordChange = (e) => {
         e.preventDefault();
-
-    
-        // console.log(passwordScore)
-
         setPassword(e.target.value);
-        setPasswordScore(passwordScore);
     }
 
     useEffect(() => {
@@ -78,7 +85,7 @@ const SignUpWithEmail = () => {
                     required
                     onChange={handlePasswordChange}
                 />
-                <PasswordStrengthMeter passwordScore={passwordScore}/>
+                <PasswordStrengthMeter passwordScore={passwordScore} />
 
             </div>
             <div className="flex items-center justify-center">
@@ -96,7 +103,7 @@ const SignUpWithEmail = () => {
                     Sign Up
                 </button>
             </div>
-            {error && <p style={{ color: 'red'}}>{error}</p>}
+            {error && <p style={{ color: 'red' }}>{error}</p>}
         </form>
     )
 }

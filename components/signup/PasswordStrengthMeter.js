@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react';
-
 const PasswordStrengthMeter = ({ passwordScore }) => {
     const changeMeterColor = () => {
         switch (passwordScore) {
