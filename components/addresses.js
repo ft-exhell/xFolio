@@ -1,5 +1,6 @@
 import { doc, updateDoc, arrayRemove } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import Link from 'next/link';
 
 export default function Addresses({ uid, addresses, bitcoinBalances, ethereumBalances, solanaBalances, handleToggleAddAddress }) {
     const handleAddressRemove = async (address, chain) => {
@@ -10,14 +11,17 @@ export default function Addresses({ uid, addresses, bitcoinBalances, ethereumBal
         });
     }
 
+    console.log(bitcoinBalances)
+
     return (
+        <>
         <div>
-            <h2 className="font-medium leading-tight text-3xl">Your Addresses</h2>
+        <h2 className="font-medium leading-tight text-3xl">Your Addresses</h2>
             <h3>Bitcoin</h3>
             <ul>
                 {addresses && addresses.bitcoin?.map((el, i) => (
                     <li key={i}>
-                        {el}, balance: {bitcoinBalances[i]}
+                        {el}, balance: {bitcoinBalances ? bitcoinBalances[i] : 'Loading...'}
                         <button
                             className="bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-medium py-1 px-2 m-2 rounded"
                             onClick={() => handleAddressRemove(el, 'bitcoin')}
@@ -31,7 +35,8 @@ export default function Addresses({ uid, addresses, bitcoinBalances, ethereumBal
             <ul>
                 {addresses && addresses.ethereum?.map((el, i) => (
                     <li key={i}>
-                        {el}, balance: {ethereumBalances[i]}
+                        {el}, ETH balance: {ethereumBalances[i] ? ethereumBalances[i].ethBalance : 'Loading...'}
+                        , <Link style={{'color': 'blue', textDecoration: 'underline'}}href='/ethereum-accounts'>ERC-20 balances</Link>
                         <button
                             className="bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-medium py-1 px-2 m-2 rounded"
                             onClick={() => handleAddressRemove(el, 'ethereum')}
@@ -45,7 +50,7 @@ export default function Addresses({ uid, addresses, bitcoinBalances, ethereumBal
             <ul>
                 {addresses && addresses.solana?.map((el, i) => (
                     <li key={i}>
-                        {el}, balance: {solanaBalances[i]}
+                        {el}, balance: {solanaBalances[i] ? solanaBalances[i] : 'Loading...'}
                         <button
                             className="bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-medium py-1 px-2 m-2 rounded"
                             onClick={() => handleAddressRemove(el, 'solana')}
@@ -62,5 +67,7 @@ export default function Addresses({ uid, addresses, bitcoinBalances, ethereumBal
                 +
             </button>
         </div>
+            
+        </>
     )
 }

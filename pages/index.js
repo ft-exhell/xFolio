@@ -12,11 +12,9 @@ import Addresses from '../components/addresses';
 export default function Home() {
   const { user, username, addresses } = useUserData();
   const [bitcoinBalances, setBitcoinBalances] = useState([]);
-  const [ethereumBalances, setEthereumBalances] = useState([]);
+  const [ethBalances, setEthBalances] = useState([]);
   const [solanaBalances, setSolanaBalances] = useState([]);
   const [addAddress, setAddAddress] = useState(false);
-
-  console.log(user)
 
   const getBitcoinBalances = async (address) => {
     const res = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${address}/balance`);
@@ -28,10 +26,28 @@ export default function Home() {
   const getEthereumBalances = async (address) => {
     const res = await fetch(`https://api.covalenthq.com/v1/1/address/${address}/balances_v2/?key=${process.env.NEXT_PUBLIC_COVALENT_API_KEY}`);
     const data = await res.json();
-    const eth = data.data.items.filter(token => token.contract_address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
-    const bigNumber = ethers.utils.parseUnits(data.data.items[0].balance.toString(), 'wei');
+    let ethBalance;
+    const erc20Balances = [];
 
-    return ethers.utils.formatUnits(bigNumber, 'ether');
+    data.data.items.forEach(item => {
+      if (item.type != 'cryptocurrency') {
+        return;
+      }
+
+      if (item.contract_address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+        ethBalance = ethers.utils.formatUnits(item.balance.toString(), 18);
+      }
+
+      erc20Balances.push(
+        {
+          contractAddress: item.contract_address,
+          contractName: item.contract_name,
+          balance: ethers.utils.parseUnits(item.balance.toString(), item.contract_decimals),
+        }
+      )
+    });
+
+    return { ethBalance, erc20Balances }
   }
 
   const getSolanaBalances = async (address) => {
@@ -63,7 +79,7 @@ export default function Home() {
             requests.push(getEthereumBalances(address));
           });
           Promise.all(requests)
-            .then(balances => setEthereumBalances(balances))
+            .then(balances => setEthBalances(balances))
         }
         if (addrType === 'solana') {
           const requests = [];
@@ -93,13 +109,13 @@ export default function Home() {
                 uid={user.uid}
                 addresses={addresses}
                 bitcoinBalances={bitcoinBalances}
-                ethereumBalances={ethereumBalances}
+                ethereumBalances={ethBalances}
                 solanaBalances={solanaBalances}
                 handleToggleAddAddress={handleToggleAddAddress}
               />
               <TotalBalance 
                 bitcoinBalances={bitcoinBalances}
-                ethereumBalances={ethereumBalances}
+                ethereumBalances={ethBalances}
                 solanaBalances={solanaBalances} 
               />
             </div>

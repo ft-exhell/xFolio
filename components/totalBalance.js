@@ -16,7 +16,10 @@ export default function TotalBalance({ bitcoinBalances, ethereumBalances, solana
                 })
         }
         if (ethereumBalances && ethereumBalances.length > 0) {
-            const totalEth= ethereumBalances.reduce((accumulator, balance) => accumulator + balance);
+            const totalEth= ethereumBalances.reduce((accumulator, obj) => {
+                console.log(typeof(obj.ethBalance))
+                return accumulator + parseInt(obj.ethBalance);
+            }, 0);
             fetch('https://api.coingecko.com/api/v3/coins/ethereum')
                 .then(res => res.json())
                 .then(data => {
