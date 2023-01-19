@@ -31,7 +31,7 @@ export default function AddAddressModal({ uid, handleToggleAddAddress }) {
     const docSnap = await getDoc(userRef);
     const userData = docSnap.data();
 
-    if (userData.addresses.length === 0 | !userData.addresses[chain]) {
+    if (userData.addresses.length === 0 || !userData.addresses[chain]) {
       await updateDoc(userRef, { [`addresses.${chain}`]: [address]})
       handleToggleAddAddress(false);
     } 
